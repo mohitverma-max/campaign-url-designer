@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Link Forge — Road to Top 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.4.4/qrcode.min.js"></script>
+<style>
+  :root{
+    --bg:#f6faf8; --surface:#ffffff; --surface-2:#eef6f3; --border:#d9e7e2;
+    --text:#122420; --text-muted:#5c716b;
+    --accent:#51a982; --accent-strong:#51a982; --accent-contrast:#ffffff;
+    --navy:#1e3561; --warn:#a3701f; --warn-bg:#fbf1de; --danger:#b3462c; --danger-bg:#fbe9e4;
+    --ok:#1b3c2d; --ok-bg:#def1ea;
+    --shadow: 0 1px 2px rgba(18,36,32,.06), 0 8px 24px -12px rgba(18,36,32,.18);
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0b1614; --surface:#12221e; --surface-2:#172d27; --border:#25443c;
+      --text:#e9f3f0; --text-muted:#9db3ac;
+      --accent:#74ba9b; --accent-strong:#93cab2; --accent-contrast:#06110d;
+      --navy:#5d6e8d; --warn:#e0b45c; --warn-bg:#2b230f; --danger:#e08a6f; --danger-bg:#2c1712;
+      --ok:#93cab2; --ok-bg:#0f2620;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px -14px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0b1614; --surface:#12221e; --surface-2:#172d27; --border:#25443c;
+    --text:#e9f3f0; --text-muted:#9db3ac;
+    --accent:#74ba9b; --accent-strong:#93cab2; --accent-contrast:#06110d;
+    --navy:#5d6e8d; --warn:#e0b45c; --warn-bg:#2b230f; --danger:#e08a6f; --danger-bg:#2c1712;
+    --ok:#93cab2; --ok-bg:#0f2620;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px -14px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{ background:var(--bg); color:var(--text); font-family:'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height:1.5; }
+  .wrap{ max-width:1080px; margin:0 auto; padding-inline:20px; }
+  h1,h2,h3{ font-family:'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight:700; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono','SFMono-Regular',Menlo,monospace; }
+  a{ color:var(--accent-strong); }
+  button{ font-family:inherit; }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .topbar{ padding-block:18px; border-bottom:1px solid var(--border); }
+  .topbar .row{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .brand{ display:flex; align-items:center; gap:9px; font-weight:600; }
+  .brand .dot{ width:10px;height:10px;border-radius:50%; background:linear-gradient(135deg,var(--navy),var(--accent)); flex:none; }
+  .topbar .tag{ font-size:.82rem; color:var(--text-muted); }
+
+  .hero{ padding-block:44px 26px; }
+  .hero h1{ font-size:clamp(1.6rem, 1.1rem + 2.2vw, 2.4rem); max-width:20ch; }
+  .hero p.lede{ margin-top:12px; max-width:62ch; color:var(--text-muted); font-size:1.02rem; }
+  .gap-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:24px; }
+  .gap-chip{ flex:1 1 210px; min-width:170px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:13px 14px; box-shadow:var(--shadow); }
+  .gap-chip h4{ margin:0 0 3px; font-size:.9rem; font-weight:700; }
+  .gap-chip p{ margin:0; font-size:.8rem; color:var(--text-muted); }
+
+  section.block{ padding-block:26px; }
+
+  .workspace{ display:grid; grid-template-columns:1.15fr 1fr; gap:20px; align-items:start; }
+  @media (max-width:860px){ .workspace{ grid-template-columns:1fr; } }
+
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px; }
+  .card h2{ font-size:1rem; margin-bottom:2px; text-transform:uppercase; letter-spacing:.03em; color:var(--accent); }
+  .card .sub{ font-size:.83rem; color:var(--text-muted); margin:0 0 18px; }
+
+  .field{ margin-bottom:15px; }
+  .field:last-child{ margin-bottom:0; }
+  .field label{ display:flex; justify-content:space-between; align-items:baseline; font-size:.83rem; font-weight:600; margin-bottom:6px; }
+  .field label .opt{ font-weight:400; color:var(--text-muted); font-size:.78rem; }
+  .field input, .field select, .field textarea{
+    width:100%; padding:9px 11px; border-radius:9px; border:1px solid var(--border);
+    background:var(--bg); color:var(--text); font-size:.92rem; font-family:inherit;
+  }
+  .field .hint{ font-size:.76rem; color:var(--text-muted); margin-top:4px; }
+  .field.invalid input, .field.invalid select{ border-color:var(--danger); }
+  .field .err{ display:none; color:var(--danger); font-size:.78rem; margin-top:4px; }
+  .field.invalid .err{ display:block; }
+
+  .combo{ display:flex; gap:6px; }
+  .combo select{ flex:1; }
+  .combo input{ flex:1; display:none; }
+  .combo.custom select{ display:none; }
+  .combo.custom input{ display:block; }
+  .combo button{ flex:none; border:1px solid var(--border); background:var(--surface-2); color:var(--text); border-radius:9px; padding:0 10px; font-size:.78rem; cursor:pointer; }
+
+  .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:500px){ .two-col{ grid-template-columns:1fr; } }
+
+  .toggle-row{ display:flex; gap:8px; margin-bottom:14px; }
+  .toggle-btn{ flex:1; border:1px solid var(--border); background:var(--surface-2); color:var(--text-muted); border-radius:9px; padding:8px 10px; font-size:.8rem; font-weight:600; cursor:pointer; }
+  .toggle-btn.active{ background:var(--accent-strong); color:var(--accent-contrast); border-color:var(--accent-strong); }
+  .parts-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+  @media (max-width:500px){ .parts-grid{ grid-template-columns:1fr; } }
+  [hidden]{ display:none !important; }
+
+  .btn{ display:inline-flex; align-items:center; gap:7px; justify-content:center; background:var(--accent-strong); color:var(--accent-contrast); border:none; padding:11px 18px; border-radius:10px; font-size:.9rem; font-weight:600; cursor:pointer; }
+  .btn:hover{ filter:brightness(1.05); }
+  .btn.ghost{ background:transparent; color:var(--text); border:1px solid var(--border); }
+  .btn.small{ padding:7px 12px; font-size:.8rem; }
+  .btn:disabled{ opacity:.45; cursor:not-allowed; }
+
+  /* Preview pane */
+  .preview-url{ background:var(--bg); border:1px dashed var(--border); border-radius:10px; padding:12px 13px; font-family:'IBM Plex Mono',monospace; font-size:.8rem; word-break:break-all; min-height:2.6em; color:var(--text-muted); }
+  .preview-url.ready{ color:var(--text); border-style:solid; }
+  .notice{ display:flex; gap:8px; align-items:flex-start; padding:10px 12px; border-radius:9px; font-size:.8rem; margin-top:10px; }
+  .notice.warn{ background:var(--warn-bg); color:var(--warn); }
+  .notice.danger{ background:var(--danger-bg); color:var(--danger); }
+  .notice.ok{ background:var(--ok-bg); color:var(--ok); }
+  .notice .ico{ flex:none; font-family:'IBM Plex Mono',monospace; font-weight:600; }
+  .preview-actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+
+  .breakdown{ margin-top:16px; display:flex; flex-direction:column; gap:6px; }
+  .breakdown .row{ display:flex; justify-content:space-between; gap:10px; font-size:.78rem; padding:5px 0; border-bottom:1px solid var(--border); }
+  .breakdown .row:last-child{ border-bottom:none; }
+  .breakdown .k{ color:var(--text-muted); font-family:'IBM Plex Mono',monospace; }
+  .breakdown .v{ text-align:right; word-break:break-all; }
+
+  .qr-panel{ margin-top:16px; display:flex; gap:14px; align-items:center; }
+  .qr-box{ width:96px; height:96px; background:#fff; border-radius:8px; display:flex; align-items:center; justify-content:center; flex:none; padding:6px; }
+  .qr-box canvas, .qr-box img{ width:100%; height:100%; }
+  .qr-panel .txt{ font-size:.8rem; color:var(--text-muted); }
+
+  /* History */
+  .history-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+  .history-controls{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .history-controls select, .history-controls input{ padding:8px 10px; border-radius:9px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:.85rem; }
+  table.history-table{ width:100%; border-collapse:collapse; font-size:.82rem; }
+  .table-scroll{ overflow-x:auto; }
+  table.history-table th{ text-align:left; color:var(--text-muted); font-weight:600; font-size:.74rem; text-transform:uppercase; letter-spacing:.03em; padding:8px 10px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  table.history-table td{ padding:9px 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+  table.history-table td.url-cell{ max-width:280px; font-family:'IBM Plex Mono',monospace; font-size:.76rem; word-break:break-all; }
+  table.history-table tr:last-child td{ border-bottom:none; }
+  .row-actions{ display:flex; gap:6px; }
+  .row-actions button{ border:1px solid var(--border); background:var(--surface-2); color:var(--text); border-radius:7px; padding:4px 8px; font-size:.74rem; cursor:pointer; }
+  .empty-state{ text-align:center; padding:34px 16px; color:var(--text-muted); font-size:.88rem; }
+
+  .toast{ position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(12px); background:var(--navy); color:#fff; padding:10px 18px; border-radius:999px; font-size:.85rem; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; z-index:10; max-width:90vw; text-align:center; }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  footer{ padding-block:30px 56px; color:var(--text-muted); font-size:.83rem; text-align:center; }
+  footer a{ color:var(--text-muted); text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="wrap row">
+    <div class="brand"><span class="dot"></span> Road to Top 5</div>
+    <div class="tag">Free tool &middot; nothing leaves your browser</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="hero">
+    <h1>Build UTM links that don't wreck your reports.</h1>
+    <p class="lede">Most UTM builders take free text and let &ldquo;Facebook&rdquo;, &ldquo;facebook&rdquo; and &ldquo;FB&rdquo; quietly split into three different channels in your dashboard. This one enforces a taxonomy, catches duplicates, and handles the messy URLs the free tools choke on.</p>
+    <div class="gap-row">
+      <div class="gap-chip"><h4>Enforced taxonomy</h4><p>Source &amp; medium come from a locked list, not free text &mdash; new values get normalized once, then reused.</p></div>
+      <div class="gap-chip"><h4>Duplicate detection</h4><p>Flags it before you generate a near-identical link under a slightly different spelling.</p></div>
+      <div class="gap-chip"><h4>Handles messy URLs</h4><p>Existing query strings, hash fragments and old UTM tags are preserved or replaced correctly &mdash; not mangled.</p></div>
+      <div class="gap-chip"><h4>QR for print &amp; local</h4><p>Every link can drop straight into a scannable QR code for flyers, signage or packaging.</p></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="workspace">
+      <div class="card">
+        <h2>Build your link</h2>
+        <p class="sub">Fields marked * are required.</p>
+        <form id="builder-form" novalidate>
+          <div class="field" id="f-destination">
+            <label for="in-destination">Destination URL <span class="opt">*</span></label>
+            <input id="in-destination" type="text" placeholder="e.g. roadtotop5.com/services" autocomplete="off">
+            <div class="hint" id="destination-hint"></div>
+            <div class="err">Enter the page this campaign should send people to.</div>
+          </div>
+
+          <div class="two-col">
+            <div class="field" id="f-source">
+              <label for="sel-source">Source <span class="opt">*</span></label>
+              <div class="combo" id="combo-source">
+                <select id="sel-source"></select>
+                <input id="in-source" placeholder="e.g. crossword-app" autocomplete="off">
+                <button type="button" data-combo="source">Custom</button>
+              </div>
+              <div class="err">Where is the traffic coming from?</div>
+            </div>
+            <div class="field" id="f-medium">
+              <label for="sel-medium">Medium <span class="opt">*</span></label>
+              <div class="combo" id="combo-medium">
+                <select id="sel-medium"></select>
+                <input id="in-medium" placeholder="e.g. sponsorship" autocomplete="off">
+                <button type="button" data-combo="medium">Custom</button>
+              </div>
+              <div class="err">What kind of traffic is it?</div>
+            </div>
+          </div>
+
+          <div class="field" id="f-campaign">
+            <label>Campaign name <span class="opt">*</span></label>
+            <div class="toggle-row">
+              <button type="button" class="toggle-btn active" data-mode="freeform">Type it myself</button>
+              <button type="button" class="toggle-btn" data-mode="parts">Build from parts</button>
+            </div>
+            <input id="in-campaign" placeholder="e.g. diwali-tax-planning-2026" autocomplete="off">
+            <div class="parts-grid" id="campaign-parts" hidden>
+              <input id="part-audience" placeholder="Audience e.g. smb-owners">
+              <input id="part-offer" placeholder="Offer/theme e.g. free-consult">
+              <input id="part-time" placeholder="Timeframe e.g. sep-2026">
+            </div>
+            <div class="hint">Lowercase, hyphens instead of spaces &mdash; applied automatically. Avoid vague names like &ldquo;campaign1&rdquo; or &ldquo;test&rdquo;.</div>
+            <div class="err">Give this campaign a name.</div>
+          </div>
+
+          <div class="two-col">
+            <div class="field">
+              <label for="in-term">Term <span class="opt">(optional)</span></label>
+              <input id="in-term" placeholder="paid search keyword">
+            </div>
+            <div class="field">
+              <label for="in-content">Content <span class="opt">(optional)</span></label>
+              <input id="in-content" placeholder="e.g. carousel-ad-v2">
+            </div>
+          </div>
+          <div class="field">
+            <label for="in-id">Campaign ID <span class="opt">(optional)</span></label>
+            <input id="in-id" placeholder="only if your platform needs utm_id">
+          </div>
+
+          <div style="margin-top:18px;">
+            <button type="submit" class="btn">Generate &amp; save link</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card" id="preview-card">
+        <h2>Preview</h2>
+        <p class="sub">Updates as you type.</p>
+        <div class="preview-url" id="preview-url">Fill in the destination, source, medium and campaign to see your link.</div>
+        <div id="preview-notices"></div>
+        <div class="preview-actions">
+          <button type="button" class="btn ghost small" id="copy-btn" disabled>Copy link</button>
+          <button type="button" class="btn ghost small" id="qr-btn" disabled>Show QR code</button>
+        </div>
+        <div class="qr-panel" id="qr-panel" hidden>
+          <div class="qr-box" id="qr-box"></div>
+          <div class="txt">Scan to test, or <button type="button" class="btn ghost small" id="qr-save-btn">save as PNG</button>.</div>
+        </div>
+        <div class="breakdown" id="breakdown"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="card">
+      <div class="history-head">
+        <div>
+          <h2>Your link history</h2>
+          <p class="sub">Saved locally in this browser, grouped by destination domain.</p>
+        </div>
+        <div class="history-controls">
+          <select id="domain-select"></select>
+          <input id="history-search" type="text" placeholder="Search campaigns&hellip;">
+          <button type="button" class="btn ghost small" id="export-btn">Export CSV</button>
+          <button type="button" class="btn ghost small" id="clear-btn">Clear domain</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="history-table" id="history-table">
+          <thead>
+            <tr><th>Created</th><th>Source</th><th>Medium</th><th>Campaign</th><th>Link</th><th></th></tr>
+          </thead>
+          <tbody id="history-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="history-empty" hidden>No links saved for this domain yet.</div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  A free tool by <a href="https://roadtotop5.com" target="_blank" rel="noopener">Road to Top 5</a>.
+</footer>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STORAGE_KEY = "linkforge_v1";
+
+  var PRESET_SOURCES = ["google","facebook","instagram","linkedin","x-twitter","tiktok","youtube","pinterest","bing","reddit","snapchat","newsletter","sms","whatsapp","referral-partner","print-qr"];
+  var PRESET_MEDIUMS = ["cpc","ppc","paid-social","paid-search","display","video","retargeting","affiliate","email","sms","print","referral"];
+  var DISALLOWED = ["test","demo","temp","temporary","asdf","tbd","todo","sample","xxx","placeholder","foo","bar","untitled"];
+
+  // ---------- storage ----------
+  function loadStore(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return { customSources:[], customMediums:[], domains:{} };
+      var parsed = JSON.parse(raw);
+      parsed.customSources = parsed.customSources || [];
+      parsed.customMediums = parsed.customMediums || [];
+      parsed.domains = parsed.domains || {};
+      return parsed;
+    } catch(e){ return { customSources:[], customMediums:[], domains:{} }; }
+  }
+  function saveStore(store){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); } catch(e){ /* storage unavailable: continue without persistence */ }
+  }
+  var store = loadStore();
+
+  // ---------- helpers ----------
+  function normalize(str, maxLen){
+    str = (str || "").toString().trim().toLowerCase();
+    str = str.replace(/\s+/g, "-");
+    str = str.replace(/[^a-z0-9\-_]/g, "");
+    str = str.replace(/-{2,}/g, "-").replace(/^-+|-+$/g, "");
+    if (maxLen && str.length > maxLen) str = str.slice(0, maxLen).replace(/-+$/,"");
+    return str;
+  }
+  function hostnameOf(destination){
+    var val = (destination || "").trim();
+    if (!val) return null;
+    if (!/^https?:\/\//i.test(val)) val = "https://" + val;
+    try{ return new URL(val).hostname.replace(/^www\./,""); } catch(e){ return null; }
+  }
+  function el(tag, attrs, children){
+    var node = document.createElement(tag);
+    attrs = attrs || {};
+    Object.keys(attrs).forEach(function(k){
+      if (k === "class") node.className = attrs[k];
+      else node.setAttribute(k, attrs[k]);
+    });
+    (children || []).forEach(function(c){ if (c != null) node.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+    return node;
+  }
+  function showToast(msg){
+    var t = document.getElementById("toast");
+    t.textContent = msg; t.classList.add("show");
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function(){ t.classList.remove("show"); }, 2400);
+  }
+  function fmtDate(iso){
+    try{ return new Date(iso).toLocaleDateString(undefined, {year:"numeric",month:"short",day:"numeric"}); } catch(e){ return iso; }
+  }
+
+  // ---------- dropdown population ----------
+  function fillSelect(select, presets, customVals){
+    select.innerHTML = "";
+    select.appendChild(el("option", {value:""}, ["Select…"]));
+    var seen = {};
+    presets.concat(customVals).forEach(function(v){
+      if (seen[v]) return; seen[v] = true;
+      select.appendChild(el("option", {value:v}, [v]));
+    });
+  }
+  function refreshSourceMedium(){
+    fillSelect(document.getElementById("sel-source"), PRESET_SOURCES, store.customSources);
+    fillSelect(document.getElementById("sel-medium"), PRESET_MEDIUMS, store.customMediums);
+  }
+  refreshSourceMedium();
+
+  // custom/select toggle for source & medium
+  ["source","medium"].forEach(function(kind){
+    var wrap = document.getElementById("combo-" + kind);
+    var btn = wrap.querySelector("button");
+    btn.addEventListener("click", function(){
+      wrap.classList.toggle("custom");
+      btn.textContent = wrap.classList.contains("custom") ? "Use list" : "Custom";
+      updatePreview();
+    });
+  });
+
+  function getComboValue(kind){
+    var wrap = document.getElementById("combo-" + kind);
+    if (wrap.classList.contains("custom")) return document.getElementById("in-" + kind).value;
+    return document.getElementById("sel-" + kind).value;
+  }
+
+  // ---------- campaign name mode ----------
+  var campaignMode = "freeform";
+  document.querySelectorAll(".toggle-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".toggle-btn").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      campaignMode = btn.getAttribute("data-mode");
+      document.getElementById("in-campaign").hidden = campaignMode !== "freeform";
+      document.getElementById("campaign-parts").hidden = campaignMode !== "parts";
+      updatePreview();
+    });
+  });
+  function getCampaignValue(){
+    if (campaignMode === "parts"){
+      var a = document.getElementById("part-audience").value;
+      var o = document.getElementById("part-offer").value;
+      var t = document.getElementById("part-time").value;
+      return [a,o,t].map(function(s){ return normalize(s); }).filter(Boolean).join("-");
+    }
+    return document.getElementById("in-campaign").value;
+  }
+
+  // ---------- URL building ----------
+  function buildUrl(destination, params){
+    var val = (destination || "").trim();
+    if (!/^https?:\/\//i.test(val)) val = "https://" + val;
+    var url;
+    try{ url = new URL(val); } catch(e){ return null; }
+    Object.keys(params).forEach(function(k){
+      if (params[k]) url.searchParams.set(k, params[k]); else url.searchParams.delete(k);
+    });
+    return url;
+  }
+
+  function collectRaw(){
+    return {
+      destination: document.getElementById("in-destination").value,
+      source: getComboValue("source"),
+      medium: getComboValue("medium"),
+      campaign: getCampaignValue(),
+      term: document.getElementById("in-term").value,
+      content: document.getElementById("in-content").value,
+      id: document.getElementById("in-id").value
+    };
+  }
+
+  function updatePreview(){
+    var raw = collectRaw();
+    var norm = {
+      source: normalize(raw.source, 40),
+      medium: normalize(raw.medium, 40),
+      campaign: normalize(raw.campaign, 60),
+      term: normalize(raw.term, 40),
+      content: normalize(raw.content, 40),
+      id: normalize(raw.id, 40)
+    };
+    var previewEl = document.getElementById("preview-url");
+    var noticesEl = document.getElementById("preview-notices");
+    var breakdownEl = document.getElementById("breakdown");
+    noticesEl.innerHTML = "";
+    breakdownEl.innerHTML = "";
+
+    var host = hostnameOf(raw.destination);
+    var ready = host && norm.source && norm.medium && norm.campaign;
+
+    document.getElementById("copy-btn").disabled = !ready;
+    document.getElementById("qr-btn").disabled = !ready;
+
+    if (!raw.destination){
+      previewEl.textContent = "Fill in the destination, source, medium and campaign to see your link.";
+      previewEl.classList.remove("ready");
+      return null;
+    }
+    if (!host){
+      previewEl.textContent = "That destination doesn't look like a valid URL yet.";
+      previewEl.classList.remove("ready");
+      return null;
+    }
+
+    var url = buildUrl(raw.destination, {
+      utm_source: norm.source, utm_medium: norm.medium, utm_campaign: norm.campaign,
+      utm_term: norm.term, utm_content: norm.content, utm_id: norm.id
+    });
+    if (!url){ previewEl.textContent = "That destination doesn't look like a valid URL yet."; previewEl.classList.remove("ready"); return null; }
+
+    var full = url.toString();
+    previewEl.textContent = full;
+    previewEl.classList.toggle("ready", !!ready);
+
+    // notices
+    var origHadUtm = /[?&]utm_[a-z]+=/.test(raw.destination);
+    if (origHadUtm) noticesEl.appendChild(notice("warn", "This destination already has UTM parameters — they'll be overwritten with the ones below."));
+    DISALLOWED.forEach(function(word){
+      var tokens = norm.campaign.split("-");
+      if (tokens.indexOf(word) !== -1) noticesEl.appendChild(notice("warn", "“" + word + "” in the campaign name reads as a placeholder — double-check this is meant for real traffic."));
+    });
+    if (full.length > 2048) noticesEl.appendChild(notice("danger", "This link is " + full.length + " characters — some ad platforms and trackers truncate or reject URLs this long."));
+    else if (full.length > 512) noticesEl.appendChild(notice("warn", "This link is getting long (" + full.length + " characters). Consider shortening the campaign or content values."));
+
+    var dupe = host ? findDuplicate(host, {source:norm.source, medium:norm.medium, campaign:norm.campaign, term:norm.term, content:norm.content, destinationPath: url.origin + url.pathname}) : null;
+    if (dupe) noticesEl.appendChild(notice("danger", "You already created this exact link on " + fmtDate(dupe.createdAt) + ". Generating again will save a duplicate."));
+
+    if (ready && !dupe && !origHadUtm) noticesEl.appendChild(notice("ok", "Looks good — ready to generate."));
+
+    [["utm_source", norm.source], ["utm_medium", norm.medium], ["utm_campaign", norm.campaign], ["utm_term", norm.term], ["utm_content", norm.content], ["utm_id", norm.id]].forEach(function(pair){
+      if (!pair[1]) return;
+      var row = el("div", {class:"row"}, [el("span", {class:"k"}, [pair[0]]), el("span", {class:"v"}, [pair[1]])]);
+      breakdownEl.appendChild(row);
+    });
+
+    return { url: full, host: host, norm: norm, destinationOrigin: url.origin + url.pathname };
+  }
+
+  function notice(kind, text){
+    var icon = kind === "ok" ? "✓" : kind === "danger" ? "!" : "▲";
+    return el("div", {class:"notice " + kind}, [el("span", {class:"ico"}, [icon]), el("span", {}, [text])]);
+  }
+
+  function findDuplicate(host, sig){
+    var domain = store.domains[host];
+    if (!domain) return null;
+    return domain.links.find(function(l){
+      return l.source === sig.source && l.medium === sig.medium && l.campaign === sig.campaign &&
+             (l.term || "") === (sig.term || "") && (l.content || "") === (sig.content || "") &&
+             l.destinationOrigin === sig.destinationPath;
+    }) || null;
+  }
+
+  // live updates
+  ["in-destination","sel-source","in-source","sel-medium","in-medium","in-campaign","part-audience","part-offer","part-time","in-term","in-content","in-id"].forEach(function(id){
+    var node = document.getElementById(id);
+    if (node) node.addEventListener("input", updatePreview);
+  });
+
+  // ---------- generate & save ----------
+  var form = document.getElementById("builder-form");
+  var lastResult = null;
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var raw = collectRaw();
+    var checks = [
+      ["f-destination", hostnameOf(raw.destination)],
+      ["f-source", normalize(raw.source)],
+      ["f-medium", normalize(raw.medium)],
+      ["f-campaign", normalize(getCampaignValue())]
+    ];
+    var firstInvalid = null;
+    checks.forEach(function(c){
+      var wrapper = document.getElementById(c[0]);
+      var bad = !c[1];
+      wrapper.classList.toggle("invalid", bad);
+      if (bad && !firstInvalid) firstInvalid = wrapper;
+    });
+    if (firstInvalid){ firstInvalid.scrollIntoView({behavior:"smooth", block:"center"}); return; }
+
+    var result = updatePreview();
+    if (!result) return;
+
+    // normalize fields back into the visible inputs so the taxonomy sticks
+    document.getElementById("in-source").value = result.norm.source;
+    document.getElementById("in-medium").value = result.norm.medium;
+    if (campaignMode === "freeform") document.getElementById("in-campaign").value = result.norm.campaign;
+    document.getElementById("in-term").value = result.norm.term;
+    document.getElementById("in-content").value = result.norm.content;
+    document.getElementById("in-id").value = result.norm.id;
+
+    if (result.norm.source && store.customSources.indexOf(result.norm.source) === -1 && PRESET_SOURCES.indexOf(result.norm.source) === -1) store.customSources.push(result.norm.source);
+    if (result.norm.medium && store.customMediums.indexOf(result.norm.medium) === -1 && PRESET_MEDIUMS.indexOf(result.norm.medium) === -1) store.customMediums.push(result.norm.medium);
+
+    if (!store.domains[result.host]) store.domains[result.host] = { links: [] };
+    store.domains[result.host].links.unshift({
+      id: "l" + Date.now() + Math.random().toString(36).slice(2,7),
+      url: result.url,
+      destinationOrigin: result.destinationOrigin,
+      source: result.norm.source, medium: result.norm.medium, campaign: result.norm.campaign,
+      term: result.norm.term, content: result.norm.content, campaignId: result.norm.id,
+      createdAt: new Date().toISOString()
+    });
+    saveStore(store);
+    refreshSourceMedium();
+    document.getElementById("sel-source").value = result.norm.source;
+    document.getElementById("sel-medium").value = result.norm.medium;
+    lastResult = result;
+    renderHistory(result.host);
+    showToast("Link saved to your history");
+    updatePreview();
+  });
+
+  // ---------- copy / QR ----------
+  document.getElementById("copy-btn").addEventListener("click", function(){
+    var r = updatePreview();
+    if (!r) return;
+    navigator.clipboard.writeText(r.url).then(function(){ showToast("Link copied"); }, function(){ showToast("Couldn't copy — select and copy manually"); });
+  });
+
+  var qrPanel = document.getElementById("qr-panel");
+  var qrBox = document.getElementById("qr-box");
+  document.getElementById("qr-btn").addEventListener("click", function(){
+    var r = updatePreview();
+    if (!r) return;
+    qrBox.innerHTML = "";
+    try{
+      new QRCode(qrBox, { text:r.url, width:96, height:96, correctLevel: QRCode.CorrectLevel.M });
+      qrPanel.hidden = false;
+    } catch(e){ showToast("Couldn't generate a QR code for this link"); }
+  });
+
+  document.getElementById("qr-save-btn").addEventListener("click", function(){
+    var canvas = qrBox.querySelector("canvas");
+    if (!canvas){ showToast("Generate the QR code first"); return; }
+    canvas.toBlob(function(blob){
+      if (!blob){ showToast("Couldn't prepare the image"); return; }
+      if (!window.claude || !window.claude.use){ showToast("Right-click the QR code to save it"); return; }
+      claude.use("downloads").then(function(downloads){
+        if (!downloads){ showToast("Right-click the QR code to save it"); return; }
+        downloads.save({ filename:"link-forge-qr.png", data:blob }).then(function(){
+          showToast("QR code saved");
+        }, function(err){
+          if (err && err.code === "declined") return;
+          showToast("Right-click the QR code to save it");
+        });
+      }, function(){ showToast("Right-click the QR code to save it"); });
+    }, "image/png");
+  });
+
+  // ---------- history ----------
+  function domainList(){ return Object.keys(store.domains).sort(function(a,b){ return store.domains[b].links.length - store.domains[a].links.length; }); }
+
+  function populateDomainSelect(preferred){
+    var sel = document.getElementById("domain-select");
+    var domains = domainList();
+    sel.innerHTML = "";
+    if (!domains.length){ sel.appendChild(el("option",{value:""},["No links yet"])); sel.disabled = true; return; }
+    sel.disabled = false;
+    domains.forEach(function(d){
+      sel.appendChild(el("option", {value:d}, [d + " (" + store.domains[d].links.length + ")"]));
+    });
+    sel.value = (preferred && store.domains[preferred]) ? preferred : domains[0];
+  }
+
+  function currentDomain(){
+    var sel = document.getElementById("domain-select");
+    return sel.value || null;
+  }
+
+  function renderHistory(preferDomain){
+    populateDomainSelect(preferDomain);
+    var domain = currentDomain();
+    var body = document.getElementById("history-body");
+    var empty = document.getElementById("history-empty");
+    var table = document.getElementById("history-table");
+    body.innerHTML = "";
+    var links = domain && store.domains[domain] ? store.domains[domain].links.slice() : [];
+    var q = (document.getElementById("history-search").value || "").toLowerCase();
+    if (q) links = links.filter(function(l){ return (l.campaign + " " + l.source + " " + l.medium).toLowerCase().indexOf(q) !== -1; });
+
+    if (!links.length){ table.hidden = true; empty.hidden = false; return; }
+    table.hidden = false; empty.hidden = true;
+
+    links.forEach(function(l){
+      var tr = el("tr", {}, [
+        el("td", {}, [fmtDate(l.createdAt)]),
+        el("td", {}, [l.source]),
+        el("td", {}, [l.medium]),
+        el("td", {}, [l.campaign]),
+        el("td", {class:"url-cell"}, [l.url])
+      ]);
+      var actions = el("td", {});
+      var actionsWrap = el("div", {class:"row-actions"});
+      var copyBtn = el("button", {type:"button"}, ["Copy"]);
+      copyBtn.addEventListener("click", function(){
+        navigator.clipboard.writeText(l.url).then(function(){ showToast("Link copied"); }, function(){ showToast("Couldn't copy"); });
+      });
+      var delBtn = el("button", {type:"button"}, ["Delete"]);
+      delBtn.addEventListener("click", function(){
+        store.domains[domain].links = store.domains[domain].links.filter(function(x){ return x.id !== l.id; });
+        if (!store.domains[domain].links.length) delete store.domains[domain];
+        saveStore(store);
+        renderHistory();
+      });
+      actionsWrap.appendChild(copyBtn); actionsWrap.appendChild(delBtn);
+      actions.appendChild(actionsWrap);
+      tr.appendChild(actions);
+      body.appendChild(tr);
+    });
+  }
+
+  document.getElementById("domain-select").addEventListener("change", function(){ renderHistory(); });
+  document.getElementById("history-search").addEventListener("input", function(){ renderHistory(); });
+
+  // clear (two-step inline confirm)
+  var clearBtn = document.getElementById("clear-btn");
+  var clearArmed = false;
+  clearBtn.addEventListener("click", function(){
+    var domain = currentDomain();
+    if (!domain) return;
+    if (!clearArmed){ clearArmed = true; clearBtn.textContent = "Click again to confirm"; setTimeout(function(){ clearArmed = false; clearBtn.textContent = "Clear domain"; }, 3000); return; }
+    delete store.domains[domain];
+    saveStore(store);
+    clearArmed = false; clearBtn.textContent = "Clear domain";
+    renderHistory();
+    showToast("Cleared history for " + domain);
+  });
+
+  // export CSV
+  document.getElementById("export-btn").addEventListener("click", function(){
+    var domain = currentDomain();
+    if (!domain || !store.domains[domain] || !store.domains[domain].links.length){ showToast("Nothing to export for this domain"); return; }
+    var rows = [["created","source","medium","campaign","term","content","campaign_id","url"]];
+    store.domains[domain].links.forEach(function(l){
+      rows.push([l.createdAt, l.source, l.medium, l.campaign, l.term||"", l.content||"", l.campaignId||"", l.url]);
+    });
+    var csv = rows.map(function(r){
+      return r.map(function(cell){
+        cell = String(cell);
+        return /[",\n]/.test(cell) ? '"' + cell.replace(/"/g,'""') + '"' : cell;
+      }).join(",");
+    }).join("\n");
+
+    function fallbackCopy(){
+      navigator.clipboard.writeText(csv).then(function(){ showToast("CSV copied to clipboard"); }, function(){ showToast("Couldn't export — try copying links individually"); });
+    }
+    if (!window.claude || !window.claude.use){ fallbackCopy(); return; }
+    claude.use("downloads").then(function(downloads){
+      if (!downloads){ fallbackCopy(); return; }
+      downloads.save({ filename: domain + "-utm-links.csv", data: csv }).then(function(){
+        showToast("CSV saved");
+      }, function(err){
+        if (err && err.code === "declined") return;
+        fallbackCopy();
+      });
+    }, fallbackCopy);
+  });
+
+  // ---------- init ----------
+  updatePreview();
+  renderHistory();
+})();
+</script>
+</body>
+</html>
